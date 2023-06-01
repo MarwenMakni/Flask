@@ -1,26 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
     <header>
-        <h1>Result</h1>
-        <a href="{{ url_for('logout') }}">Logout</a>
+      <h1>Result</h1>
+      <a href="{{ url_for('logout') }}">Logout</a>
     </header>
     <div class="container">
-        <div class="result-container">
-            <h2>Prediction Result:</h2>
-            <p>{{ result }}</p>
-        </div>
-        <form action="" method="post" enctype="multipart/form-data">
-            <label for="image">Upload another image:</label>
-            <input type="file" name="image" id="image" required>
-            <input type="submit" value="Predict">
-        </form>
+      <div class="result-container">
+        <h2>Prediction Result:</h2>
+        <p>{{ result }}</p>
+        {% if filename %}
+        <img
+          id="uploaded-image"
+          src="{{ url_for('static', filename='uploads/' + filename) }}"
+          alt="Uploaded Image"
+        />
+        {% endif %}
+      </div>
+
+      <div class="card">
+        <h2>Is the prediction correct?</h2>
+
+        <button class="model-button yes-button" id="yes-btn" value="yes">
+          Yes
+        </button>
+        <button class="model-button no-button" id="no-btn" value="no">
+          No
+        </button>
+      </div>
+
+      <form id="form" action="" method="post">
+        <textarea
+          placeholder="Observation Notes"
+          name="observation-notes"
+          id="observation-notes"
+          cols="30"
+          rows="10"
+        ></textarea>
+        <div id="other-options"></div>
+        <input type="submit" id="submit-btn" />
+      </form>
+
+      <!-- I would suggest using a link to the initial form
+        instead of keeping multiple "predict forms" -->
+      <a class="model-button" href="{{ url_for('predict') }}"
+        >Upload another image</a
+      >
     </div>
-</body>
+  </body>
+  <script>
+    const OPTIONS = [
+      {
+        id: "cancer-one",
+        label: "Cancer One",
+      },
+      {
+        id: "cancer-two",
+        label: "Cancer Two",
+      },
+      {
+        id: "cancer-three",
+        label: "Cancer Three",
+      },
+      // add as much as you like :3
+      // or you can also fetch from the server
+    ];
+
+    const optionsContainer = document.getElementById("other-options");
+    const observationsBox = document.getElementById("observation-notes");
+    const submitBtn = document.getElementById("submit-btn");
+    const form = document.getElementById("form");
+
+    const initialScripts = () => {
+      observationsBox.style.display = "none";
+      submitBtn.style.display = "none";
+      form.style.display = "none";
+    };
+
+    document.addEventListener("DOMContentLoaded", initialScripts);
+
+    const yesBtn = document.getElementById("yes-btn");
+    const noBtn = document.getElementById("no-btn");
+
+    const defaultAction = () => {
+      observationsBox.style.display = "block";
+      submitBtn.style.display = "block";
+      form.style.display = "block";
+    };
+
+    const handleCorrect = () => {
+      defaultAction();
+      optionsContainer.innerHTML = "";
+    };
+
+    const createOptions = (options) => {
+      const optionsList = document.createElement("ul");
+      optionsList.classList.add("options-list");
+
+      options.forEach((option) => {
+        const optionItem = document.createElement("li");
+        optionItem.classList.add("radio-container");
+
+        const optionInput = document.createElement("input");
+        optionInput.type = "radio";
+        optionInput.name = "other-options";
+        optionInput.value = option.id;
+        optionInput.id = option.id;
+
+        const optionLabel = document.createElement("label");
+        optionLabel.htmlFor = option.id;
+        optionLabel.innerText = option.label;
+
+        optionItem.appendChild(optionInput);
+        optionItem.appendChild(optionLabel);
+
+        optionsList.appendChild(optionItem);
+      });
+
+      return optionsList;
+    };
+
+    const handleIncorrect = () => {
+      optionsContainer.appendChild(createOptions(OPTIONS));
+      defaultAction();
+    };
+
+    yesBtn.addEventListener("click", () => handleCorrect());
+
+    noBtn.addEventListener("click", () => handleIncorrect());
+  </script>
 </html>

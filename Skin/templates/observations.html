@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Observations</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <header>
+      <h1>Observations</h1>
+      <a href="{{ url_for('logout') }}">Logout</a>
+    </header>
+    <div class="container">
+      <div class="result-container">
+        <h2>Prediction Result:</h2>
+        <p>{{ result }}</p>
+        {% if filename %}
+        <img
+          id="uploaded-image"
+          src="{{ url_for('static', filename='uploads/' + filename) }}"
+          alt="Uploaded Image"
+        />
+        {% endif %}
+      </div>
+
+      <form action="" method="post">
+        <h2>Is the prediction correct?</h2>
+
+        <button class="model-button yes-button" value="yes">Yes</button>
+        <button class="model-button no-button" value="no">No</button>
+
+        <!-- I would suggest using a link to the initial form
+        instead of keeping multiple "predict forms" -->
+        <a class="model-button" href="{{ url_for('predict') }}"
+          >Upload another image</a
+        >
+      </form>
+    </div>
+  </body>
+</html>

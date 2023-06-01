@@ -1,35 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Predict</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
     <header>
-        <h1>Predict</h1>
-        <a href="{{ url_for('logout') }}">Logout</a>
+      <h1>Predict</h1>
+      <a href="{{ url_for('logout') }}">Logout</a>
     </header>
 
     <div class="container">
-        <form action="" method="post" enctype="multipart/form-data">
-            <label for="image">Upload an image:</label>
-            <input type="file" name="image" id="image" required>
-            <input type="hidden" name="username" value="{{ current_user.username }}">
-            <h1>Choose a Model:</h1>
-            <button class="button model-button" name="button1">InceptionV3</button>
-            <button class="model-button" name="button2">ResNet101</button>
-            <button class="model-button" name="button3">InceptionResNetV2</button>
-            <div class="result-container">
-				<h2>Prediction Result:</h2>
-				{% if filename %}
-				<img id="uploaded-image" src="{{ url_for('static', filename='uploads/' + filename) }}" alt="Uploaded Image">
-				{% endif %}
-				<p class="result">{{ result }}</p>
-				<p class="predict-filename">{{ filename }}</p>
-			</div>			
-        </form>
+      <form action="" method="post" enctype="multipart/form-data">
+        <label for="image">Upload an image:</label>
+        <input type="file" name="image" id="image" required />
+        <input
+          type="hidden"
+          name="username"
+          value="{{ current_user.username }}"
+        />
+        <h1>Choose a Model:</h1>
+        <!-- Radio inputs are used to select a single option from a list. -->
+        <div class="radio-container">
+          <input
+            type="radio"
+            name="model"
+            value="InceptionV3"
+            id="InceptionV3"
+          />
+          <label for="InceptionV3">InceptionV3</label>
+        </div>
+
+        <div class="radio-container">
+          <input type="radio" name="model" value="ResNet101" id="ResNet101" />
+          <label for="ResNet101">ResNet101</label>
+        </div>
+
+        <div class="radio-container">
+          <input
+            type="radio"
+            name="model"
+            value="InceptionResNetV2"
+            id="InceptionResNetV2"
+          />
+          <label for="InceptionResNetV2">InceptionResNetV2</label>
+        </div>
+
+        <input type="submit" value="Predict" />
+      </form>
     </div>
-</body>
+  </body>
 </html>
